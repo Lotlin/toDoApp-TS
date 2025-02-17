@@ -4,8 +4,6 @@ import { STORAGE_KEY } from "../modules/consts";
 import { UserTasks } from "../types/userTasks";
 import { allUsersTasks } from "../types/allUsersTasks";
 
-// ToDo закрытие модалки по клику по овеплею + оверлей другого цвета 
-
 const ModalAuth: React.FC<{ isOpen: boolean }> = ({isOpen}) => {
   const [isModalOpen, setIsModalOpen] = useState(isOpen);
   const [login, setLogin] = useState('');
