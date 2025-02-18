@@ -1,13 +1,19 @@
 import React, { useState } from "react";
 import ModalAuth from "./components/ModalAuth";
+import { Tasks } from "./components/Tasks";
 
 const App: React.FC = () => {
-  console.log(1);
+  const [isModalAuthOpen, setIsModalAuthOpen] = useState(true);
+
+  const hadleCloseModalAuth = () => {
+    setIsModalAuthOpen(false)
+  }
 
   return (
-    <div>
-      <ModalAuth isOpen={true} />
-    </div>
+    <>
+      <ModalAuth isOpen={isModalAuthOpen} onClose={hadleCloseModalAuth}/>
+      {!isModalAuthOpen && <Tasks />}
+    </>
   );
 };
 

@@ -3,14 +3,16 @@ import Modal from "./Modal";
 import { STORAGE_KEY } from "../modules/consts";
 import { UserTasks } from "../types/userTasks";
 import { allUsersTasks } from "../types/allUsersTasks";
+import { useAuth } from "../context/AuthContext";
 
-const ModalAuth: React.FC<{ isOpen: boolean }> = ({isOpen}) => {
-  const [isModalOpen, setIsModalOpen] = useState(isOpen);
-  const [login, setLogin] = useState('');
+const ModalAuth: React.FC<{ isOpen: boolean; onClose: () => void }> = ({isOpen, onClose}) => {
+  const { setLogin, logout } = useAuth();
+  const [login, setLoginLocal] = useState('');
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
+  const closeAndLogOut = () => {
+    logout();
+    onClose();
+  }
 
   const getAllUsersLocalStorageTasks = (): allUsersTasks => {
     const storedData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') as allUsersTasks;
@@ -30,8 +32,12 @@ const ModalAuth: React.FC<{ isOpen: boolean }> = ({isOpen}) => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(allUsersTasks));
   }
 
-  const createCurrentUserStorageInLocalStorage = (currentUserDataTasks: UserTasks):void => {
+  const createCurrentUserStorageInLocalStorage = (currentUserDataTasks: UserTasks):void => {  // toDO нужно ли (для уменьшения объема данных)
     localStorage.setItem(login, JSON.stringify(currentUserDataTasks));
+  }
+
+  const writeCurrentUserLoginToLocalStorage = (login:string): void => {
+    localStorage.setItem('currentUser', login);
   }
 
   const handleLocalStorageData = (): void => {
@@ -47,16 +53,18 @@ const ModalAuth: React.FC<{ isOpen: boolean }> = ({isOpen}) => {
     }
 
     createCurrentUserStorageInLocalStorage(allUsersTasks[login]);
+    writeCurrentUserLoginToLocalStorage(login);
   }
 
   const handleSubmit = (e: React.FormEvent):void => {
     e.preventDefault();
+    setLogin(login);
     handleLocalStorageData();
-    closeModal();
+    onClose();
   };
 
   return (
-    <Modal isOpen={isModalOpen} onClose={closeModal} title="Авторизация">
+    <Modal isOpen={isOpen} onClose={closeAndLogOut} title="Авторизация">
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="login" className="form-label">
@@ -69,7 +77,7 @@ const ModalAuth: React.FC<{ isOpen: boolean }> = ({isOpen}) => {
             placeholder="Введите логин"
             value={login}
             required={true}
-            onChange={(e) => setLogin(e.target.value)}
+            onChange={(e) => setLoginLocal(e.target.value)}
           />
         </div>
 
