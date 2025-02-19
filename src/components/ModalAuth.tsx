@@ -4,6 +4,8 @@ import { STORAGE_KEY } from "../modules/consts";
 import { allUsersTasks } from "../types/allUsersTasks";
 import { useAuth } from "../context/AuthContext";
 
+// toDO desabled кнопка входа без логина
+
 const ModalAuth: React.FC<{ isOpen: boolean; onClose: () => void }> = ({isOpen, onClose}) => {
   const { setLogin, logout } = useAuth();
   const [login, setLoginLocal] = useState('');
@@ -31,7 +33,7 @@ const ModalAuth: React.FC<{ isOpen: boolean; onClose: () => void }> = ({isOpen, 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(allUsersTasks));
   }
 
-  const saveLoginToStorage = (login:string): void => {
+  const saveLoginToStorage = (login:string): void => {   // toDO ключ - в константы
     localStorage.setItem('currentUser', login);
   }
 

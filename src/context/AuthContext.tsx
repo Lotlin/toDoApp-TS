@@ -11,9 +11,9 @@ const AuthContext = createContext<{
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [login, setLogin] = useState<string | null>(localStorage.getItem('currentUser'));
+  const [login, setLogin] = useState<string | null>(localStorage.getItem('currentUser')); // toDO ключ - в константы
   const logout = () => {
-    localStorage.removeItem('currentUser');
+    localStorage.removeItem('currentUser'); // toDO ключ - в константы
     setLogin(null);
   };
 
