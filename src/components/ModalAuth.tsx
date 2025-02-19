@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Modal from "./Modal";
 import { STORAGE_KEY } from "../modules/consts";
-import { UserTasks } from "../types/userTasks";
 import { allUsersTasks } from "../types/allUsersTasks";
 import { useAuth } from "../context/AuthContext";
 
@@ -9,22 +8,22 @@ const ModalAuth: React.FC<{ isOpen: boolean; onClose: () => void }> = ({isOpen, 
   const { setLogin, logout } = useAuth();
   const [login, setLoginLocal] = useState('');
 
-  const closeAndLogOut = () => {
+  const closeAndLogout = () => {
     logout();
     onClose();
   }
 
-  const getAllUsersLocalStorageTasks = (): allUsersTasks => {
+  const getUsersTasks = (): allUsersTasks => {
     const storedData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') as allUsersTasks;
 
     return storedData;
   }
 
-  const createAllUsersLocalStorageTasks = (): void => {
+  const createUsersTasks = (): void => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({}));
   }
 
-  const addNewUserToAllUsersDataInToLocalStorage = (
+  const addUserToStorage = (
     allUsersTasks: allUsersTasks, 
     login: string,
   ):void => {
@@ -32,40 +31,35 @@ const ModalAuth: React.FC<{ isOpen: boolean; onClose: () => void }> = ({isOpen, 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(allUsersTasks));
   }
 
-  const createCurrentUserStorageInLocalStorage = (currentUserDataTasks: UserTasks):void => {  // toDO нужно ли (для уменьшения объема данных)
-    localStorage.setItem(login, JSON.stringify(currentUserDataTasks));
-  }
-
-  const writeCurrentUserLoginToLocalStorage = (login:string): void => {
+  const saveLoginToStorage = (login:string): void => {
     localStorage.setItem('currentUser', login);
   }
 
-  const handleLocalStorageData = (): void => {
-    let allUsersTasks = getAllUsersLocalStorageTasks();
+  const initializeUserData = (): void => {
+    let allUsersTasks = getUsersTasks();
 
     if (Object.keys(allUsersTasks).length === 0) {
       allUsersTasks = {};
-      createAllUsersLocalStorageTasks();
+      createUsersTasks();
     }
 
     if (!allUsersTasks[login]) {
-      addNewUserToAllUsersDataInToLocalStorage(allUsersTasks, login);
+      addUserToStorage(allUsersTasks, login);
     }
 
-    createCurrentUserStorageInLocalStorage(allUsersTasks[login]);
-    writeCurrentUserLoginToLocalStorage(login);
+    saveLoginToStorage(login);
   }
 
-  const handleSubmit = (e: React.FormEvent):void => {
+  const submitForm = (e: React.FormEvent):void => {
     e.preventDefault();
     setLogin(login);
-    handleLocalStorageData();
+    initializeUserData();
     onClose();
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={closeAndLogOut} title="Авторизация">
-      <form onSubmit={handleSubmit}>
+    <Modal isOpen={isOpen} onClose={closeAndLogout} title="Авторизация">
+      <form onSubmit={submitForm}>
         <div className="mb-3">
           <label htmlFor="login" className="form-label">
             Логин
