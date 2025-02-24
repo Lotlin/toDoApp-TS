@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { Task } from "../types/task";
+import { STORAGE_KEY } from "../modules/consts";
+import { useTasks } from "../context/TaskContext";
+
+// toDO сделать ровную таблицу
+// toDO сделать кноку выйти
 
 export const Tasks = () => {
   const { login } = useAuth();
@@ -8,14 +13,7 @@ export const Tasks = () => {
 
   if (!login) return <div>Пользователь не авторизован</div>;
 
-  const getcurrentUserTasks = ():Task[] => {
-    const storedData = JSON.parse(localStorage.getItem('toDoApp') || '{}');
-    const currentUserTasks = storedData[login] || [];
-
-    return currentUserTasks;
-  }
-
-  const currentUserTasks = getcurrentUserTasks();
+  const { tasks, toggleTaskCompletion }= useTasks();
 
   const createTask = (newTask:string): Task => {
     const taskId = Math.random().toString(16).substring(2, 10);
@@ -23,14 +21,14 @@ export const Tasks = () => {
     const task = {
       id: taskId,
       task: newTask,
-      status: 'В процессе',  // toDo задавать статусы (в процессе/выполнена)
+      isCompleted: false,
     }
 
     return task;
   }
 
   const saveTask = (task:Task):void => {
-    const storedData = JSON.parse(localStorage.getItem('toDoApp') || '{}');
+    const storedData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
 
     if (!storedData[login]) {
       storedData[login] = [];
@@ -38,11 +36,16 @@ export const Tasks = () => {
 
     storedData[login].push(task);
 
-    localStorage.setItem('toDoApp', JSON.stringify(storedData));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(storedData));
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewTask(e.target.value)
+  }
+
+  // toDo добавить задачу в таблицу
+  const addNewTaskToTable = () => {
+    
   }
 
   const submitNewTaskForm = (e: React.FormEvent):void  => {
@@ -50,9 +53,10 @@ export const Tasks = () => {
     const task = createTask(newTask);
     console.log('task: ', task);
     saveTask(task);
+    setNewTask('');
   }
 
-  if(!currentUserTasks.length) {
+  if(!tasks.length) {
     return (
       <>
         <h3>Todo App</h3>
@@ -122,18 +126,18 @@ export const Tasks = () => {
             </thead>
 
             <tbody>
-            { currentUserTasks.map((task, index) => (
+            { tasks.map((task, index) => (
               <tr key={task.id} className="table-light">
                 <td>{index + 1}</td>
-                <td className="task">
+                <td className={`task ${task.isCompleted ? 'text-decoration-line-through' : ''}`}>
                   {task.task}
                 </td>
-                <td>{task.status}</td>
+                <td>{task.isCompleted ? 'Завершена' : 'В процессе'}</td>
                 <td>
                   <button className="btn btn-danger">
                     Удалить
                   </button>
-                  <button className="btn btn-success">
+                  <button className="btn btn-success" onClick={() => toggleTaskCompletion(task.id)}>
                     Завершить
                   </button>
                 </td>

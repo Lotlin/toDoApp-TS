@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Modal from "./Modal";
-import { STORAGE_KEY } from "../modules/consts";
+import { CURRENT_USER_STORAGE_KEY, STORAGE_KEY } from "../modules/consts";
 import { allUsersTasks } from "../types/allUsersTasks";
 import { useAuth } from "../context/AuthContext";
 
@@ -33,8 +33,8 @@ const ModalAuth: React.FC<{ isOpen: boolean; onClose: () => void }> = ({isOpen, 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(allUsersTasks));
   }
 
-  const saveLoginToStorage = (login:string): void => {   // toDO ключ - в константы
-    localStorage.setItem('currentUser', login);
+  const saveLoginToStorage = (login:string): void => {
+    localStorage.setItem(CURRENT_USER_STORAGE_KEY, login);
   }
 
   const initializeUserData = (): void => {

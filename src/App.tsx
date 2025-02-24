@@ -1,9 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ModalAuth from "./components/ModalAuth";
 import { Tasks } from "./components/Tasks";
+import { useAuth } from "./context/AuthContext";
 
 const App: React.FC = () => {
-  const [isModalAuthOpen, setIsModalAuthOpen] = useState(true);
+  const login = useAuth().login;
+  const [isModalAuthOpen, setIsModalAuthOpen] = useState(!login);
+
+  useEffect(() => {
+    if(login) {
+      setIsModalAuthOpen(false);
+    }
+  }, [login])
 
   const hadleCloseModalAuth = () => {
     setIsModalAuthOpen(false)
@@ -11,7 +19,7 @@ const App: React.FC = () => {
 
   return (
     <>
-      <ModalAuth isOpen={isModalAuthOpen} onClose={hadleCloseModalAuth}/>
+      {!login && <ModalAuth isOpen={isModalAuthOpen} onClose={hadleCloseModalAuth}/>}
       {!isModalAuthOpen && <Tasks />}
     </>
   );

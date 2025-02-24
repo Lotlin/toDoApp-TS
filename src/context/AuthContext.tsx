@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
+import { CURRENT_USER_STORAGE_KEY } from "../modules/consts";
 
 const AuthContext = createContext<{ 
   login: string | null; 
@@ -11,9 +12,9 @@ const AuthContext = createContext<{
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [login, setLogin] = useState<string | null>(localStorage.getItem('currentUser')); // toDO ключ - в константы
+  const [login, setLogin] = useState<string | null>(localStorage.getItem(CURRENT_USER_STORAGE_KEY));
   const logout = () => {
-    localStorage.removeItem('currentUser'); // toDO ключ - в константы
+    localStorage.removeItem(CURRENT_USER_STORAGE_KEY);
     setLogin(null);
   };
 
