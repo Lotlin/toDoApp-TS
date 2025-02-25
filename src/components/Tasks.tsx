@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { Task } from "../types/task";
-import { STORAGE_KEY } from "../modules/consts";
 import { useTasks } from "../context/TaskContext";
 
 // toDO сделать ровную таблицу
@@ -13,46 +11,15 @@ export const Tasks = () => {
 
   if (!login) return <div>Пользователь не авторизован</div>;
 
-  const { tasks, toggleTaskCompletion }= useTasks();
-
-  const createTask = (newTask:string): Task => {
-    const taskId = Math.random().toString(16).substring(2, 10);
-
-    const task = {
-      id: taskId,
-      task: newTask,
-      isCompleted: false,
-    }
-
-    return task;
-  }
-
-  const saveTask = (task:Task):void => {
-    const storedData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-
-    if (!storedData[login]) {
-      storedData[login] = [];
-    }
-
-    storedData[login].push(task);
-
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(storedData));
-  }
+  const { tasks, addTask, toggleTaskCompletion, deleteTask }= useTasks();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewTask(e.target.value)
   }
-
-  // toDo добавить задачу в таблицу
-  const addNewTaskToTable = () => {
-    
-  }
-
+  
   const submitNewTaskForm = (e: React.FormEvent):void  => {
     e.preventDefault();
-    const task = createTask(newTask);
-    console.log('task: ', task);
-    saveTask(task);
+    addTask(newTask);
     setNewTask('');
   }
 
@@ -134,7 +101,7 @@ export const Tasks = () => {
                 </td>
                 <td>{task.isCompleted ? 'Завершена' : 'В процессе'}</td>
                 <td>
-                  <button className="btn btn-danger">
+                  <button className="btn btn-danger" onClick={() => deleteTask(task.id)}>
                     Удалить
                   </button>
                   <button className="btn btn-success" onClick={() => toggleTaskCompletion(task.id)}>
