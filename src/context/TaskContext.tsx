@@ -22,20 +22,23 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = useAuth().login;
   const [tasks, setTasks] = useState<UserTasks | []>([]);
 
-  if (!login) return;
-
   const allTasks = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
 
   useEffect(() => {
+    if (!login) return;
+
     const userTasks = allTasks[login] || [];
     setTasks(userTasks);
   }, [login]);
 
-  const updateTasks = (updatedTasks:Task[]) => {
-    setTasks(updatedTasks);
+  const updateTasks = (updatedTasks: Task[]) => {
+    if (!login) return;
+
     const updatedAllTasks = { ...allTasks, [login]: updatedTasks };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedAllTasks));
-  }
+
+    setTasks(updatedTasks);
+  };
 
   const createTask = (taskTitle:string): Task => {
     const taskId = Math.random().toString(16).substring(2, 10);

@@ -4,9 +4,10 @@ import { useTasks } from "../context/TaskContext";
 
 // toDO сделать ровную таблицу
 // toDO сделать кноку выйти
+// toDO сделать универсальный return
 
 export const Tasks = () => {
-  const { login } = useAuth();
+  const { login, logout } = useAuth();
   const [newTask, setNewTask] = useState('');
 
   if (!login) return <div>Пользователь не авторизован</div>;
@@ -26,6 +27,9 @@ export const Tasks = () => {
   if(!tasks.length) {
     return (
       <>
+        <button className="btn btn-primary position-absolute top-0 end-0 m-3" onClick={logout}>
+          Выйти
+        </button>
         <h3>Todo App</h3>
         <form className="d-flex align-items-center mb-3" onSubmit={submitNewTaskForm}>
           <label className="form-group me-3 mb-0">
@@ -57,6 +61,9 @@ export const Tasks = () => {
 
   return (
     <>
+      <button className="btn btn-primary position-absolute top-0 end-0 m-3" onClick={logout}>
+        Выйти
+      </button>
       <h3>Todo App</h3>
         <form className="d-flex align-items-center mb-3" onSubmit={submitNewTaskForm}>
           <label className="form-group me-3 mb-0">

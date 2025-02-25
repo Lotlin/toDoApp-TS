@@ -3,17 +3,15 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import { AuthProvider } from './context/AuthContext';
-import { TaskProvider } from './context/TaskContext';
 
 const rootElement = document.getElementById("root") as HTMLElement;
 
 const root = ReactDOM.createRoot(rootElement);
+console.log("Index.tsx запустился!");
 root.render(
   <React.StrictMode>
     <AuthProvider>
-      <TaskProvider>
-        <App />
-      </TaskProvider>
+      <App />
     </AuthProvider>
   </React.StrictMode>
 );
