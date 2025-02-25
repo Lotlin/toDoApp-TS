@@ -4,8 +4,6 @@ import { CURRENT_USER_STORAGE_KEY, STORAGE_KEY } from "../modules/consts";
 import { allUsersTasks } from "../types/allUsersTasks";
 import { useAuth } from "../context/AuthContext";
 
-// toDO desabled кнопка входа без логина
-
 const ModalAuth: React.FC<{ isOpen: boolean; onClose: () => void }> = ({isOpen, onClose}) => {
   const { setLogin, logout } = useAuth();
   const [login, setLoginLocal] = useState('');
@@ -78,7 +76,7 @@ const ModalAuth: React.FC<{ isOpen: boolean; onClose: () => void }> = ({isOpen, 
         </div>
 
         <div className="d-flex justify-content-center">
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" className="btn btn-primary" disabled={!login}>
             Войти
           </button>
         </div>

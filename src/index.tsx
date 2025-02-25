@@ -7,7 +7,6 @@ import { AuthProvider } from './context/AuthContext';
 const rootElement = document.getElementById("root") as HTMLElement;
 
 const root = ReactDOM.createRoot(rootElement);
-console.log("Index.tsx запустился!");
 root.render(
   <React.StrictMode>
     <AuthProvider>
